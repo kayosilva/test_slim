@@ -32,7 +32,7 @@ $container['em'] = function ($c) {
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
 
-$container['App\Action\UserAction'] = function ($c) {
-    $business = new App\Business\UserBusiness($c->get('em'));
-    return new App\Action\UserAction($business);
+$container['App\Action\FocaAction'] = function ($c) {
+    $business = new App\Business\FocaBusiness($c->get('em'));
+    return new App\Action\FocaAction($business);
 };
