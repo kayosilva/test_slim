@@ -1,1 +1,2 @@
-# Slim Framework 3 Skeleton Application
+# Slim Framework 3 + Doctrine 2
+Aplicação basica utilizando doctrine 2
