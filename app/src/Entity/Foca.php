@@ -124,7 +124,7 @@ class Foca
     }
 
     /**
-     * @return date
+     * @return \DateTime
      */
     public function getDtNascimento()
     {
@@ -132,7 +132,7 @@ class Foca
     }
 
     /**
-     * @param date $dtNascimento
+     * @param \DateTime $dtNascimento
      * @return Foca
      */
     public function setDtNascimento($dtNascimento)
@@ -142,7 +142,7 @@ class Foca
     }
 
     /**
-     * @return datetime
+     * @return \DateTime
      */
     public function getDtCadastro()
     {
@@ -150,12 +150,12 @@ class Foca
     }
 
     /**
-     * @param datetime $dtCadastro
+     * @param \DateTime $dtCadastro
      * @return Foca
      */
     public function setDtCadastro($dtCadastro)
     {
-        $this->dtCadastro = $dtCadastro;
+        $this->dtCadastro = $dtCadastro ? $dtCadastro : new \DateTime();
         return $this;
     }
 
@@ -213,5 +213,18 @@ class Foca
         return $this;
     }
 
+
+    /**
+     * @return array
+     */
+    public function __toArray()
+    {
+        $data = [];
+        foreach ($this as $k => $v) {
+            $data[$k] = $v;
+        }
+
+        return $data;
+    }
 
 }
