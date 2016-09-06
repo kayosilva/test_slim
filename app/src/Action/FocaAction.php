@@ -3,8 +3,6 @@
 namespace App\Action;
 
 use App\Business\FocaBusiness;
-use App\Constants\GeneroConstants;
-use App\Constants\StatusConstants;
 
 
 /**
@@ -28,20 +26,25 @@ class FocaAction
 
     public function create($request, $response, $args)
     {
-        $data = array(
-            'nome' => 'Carmenzinha',
-            'genero' => GeneroConstants::FEMEA,
-            'dtNascimento' => "10/07/2013",
-            'status' => StatusConstants::VIVO,
-            'parent_id' => 2
-        );
-
+        $data = $request->getParams();
         $result = $this->business->salvar($data);
 
         if (!is_array($result)) {
-            return $response->withStatus(400, 'Erro ao tentar salvar os dados ' . $result);
+            return $response->withJson('Erro ao tentar salvar os dados ' . $result, 400);
         }
 
         return $response->withJSON($result);
+    }
+
+    public function delete($request, $response, $args)
+    {
+        $id = $request->getParam('id');
+
+        $result = $this->business->deletar($id);
+        if (!is_bool($result)) {
+            return $response->withJson($result, 400);
+        }
+        return $response->withJson("Registro removido.", 204);
+
     }
 }

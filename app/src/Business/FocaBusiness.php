@@ -57,7 +57,8 @@ class FocaBusiness extends AbstractBusiness
      */
     public function getFocas(array $params = [], array $orderBy = ['nome' => 'asc'], $limit = null, $offset = null)
     {
-        $focas = $this->_em->getRepository($this->repositoryName)->findBy($params, $orderBy, $limit, $offset);
+        $focas = $this->_em->getRepository($this->repositoryName)
+            ->findBy($params, $orderBy, $limit, $offset);
         if ($focas) {
             foreach ($focas as $key => $foca) {
                 $focas[$key] = $this->parseEntity($foca);
@@ -118,6 +119,64 @@ class FocaBusiness extends AbstractBusiness
             return $this->parseEntity($entity);
 
         } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    /**
+     * Verifica se o registro existe, deleta os vinculos e o proprio registro
+     * @param $id
+     * @return bool
+     * @throws \Exception
+     */
+    public function deletar($id)
+    {
+        try {
+            //verifica se o id foi passado
+            if (!$id) {
+                throw new \Exception("Informe o id do registros.");
+            }
+
+            //abre a transação
+            $this->_em->beginTransaction();
+
+            //recupera o repository e armazena numa variavel
+            $repo = $this->_em->getRepository($this->repositoryName);
+
+            //busca os registros vinculados
+            $filhos = $repo->findBy(array('parent' => $id));
+
+            //verifica se encontrou registro vinculados
+            if ($filhos) {
+                //percorre os registro vinculados
+                foreach ($filhos as $filho) {
+                    //verifica se deletou os vinculos
+                    if (!$this->deletar($filho->getId())) {
+                        throw new \Exception("Erro ao desvincular registro.");
+                    }
+                }
+            }
+
+            //busca o registro em si
+            $registro = $repo->find($id);
+
+            //verifica se encontrou
+            if (!$registro) {
+                throw new \Exception("Registro não encontrado.");
+            }
+            $this->_em->remove($registro);
+            //remove o registro
+//            if (!) {
+//                throw new \Exception("Erro ao remover registro.");
+//            }
+            $this->_em->flush();
+            $this->_em->commit();
+            return true;
+
+
+        } catch (\Exception $e) {
+            $this->_em->rollback();
             return $e->getMessage();
         }
     }
