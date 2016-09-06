@@ -10,6 +10,8 @@ $app->get('/', function ($request, $response, $args) {
 
 $app->get('/api/focas', 'App\Action\FocaAction:getAll');
 
+$app->get('/api/focas/{id}', 'App\Action\FocaAction:getFoca');
+
 $app->post('/api/focas/create', 'App\Action\FocaAction:create');
 
 $app->delete('/api/focas', 'App\Action\FocaAction:delete');

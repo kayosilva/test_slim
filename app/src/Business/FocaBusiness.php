@@ -70,13 +70,22 @@ class FocaBusiness extends AbstractBusiness
 
     }
 
+
     /**
+     * Retorna foca pelo id
      * @param $id
-     * @return null|object
+     * @param bool $toArray
+     * @return array|null|object
      */
-    public function getFocaById($id)
+    public function getFocaById($id, $toArray = false)
     {
-        return $this->_em->getRepository($this->repositoryName)->find($id);
+        $result = $this->_em->getRepository($this->repositoryName)->find($id);
+
+        if ($toArray) {
+            return $this->parseEntity($result);
+        }
+
+        return $result;
     }
 
     /**
@@ -141,11 +150,9 @@ class FocaBusiness extends AbstractBusiness
             //abre a transação
             $this->_em->beginTransaction();
 
-            //recupera o repository e armazena numa variavel
-            $repo = $this->_em->getRepository($this->repositoryName);
 
             //busca os registros vinculados
-            $filhos = $repo->findBy(array('parent' => $id));
+            $filhos = $this->_em->getRepository($this->repositoryName)->findBy(array('parent' => $id));
 
             //verifica se encontrou registro vinculados
             if ($filhos) {
@@ -159,7 +166,7 @@ class FocaBusiness extends AbstractBusiness
             }
 
             //busca o registro em si
-            $registro = $repo->find($id);
+            $registro = $this->getFocaById($id);
 
             //verifica se encontrou
             if (!$registro) {

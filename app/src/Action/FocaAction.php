@@ -24,16 +24,30 @@ class FocaAction
         return $response->withJSON($result);
     }
 
+    public function getFoca($request, $response, $args)
+    {
+
+        $result = $this->business->getFocaById($args['id'], true);
+
+        if (!is_array($result)) {
+            return $response->withJson('Erro ao tentar consultar os dados ' . $result, 400);
+        }
+
+        return $response->withJSON($result);
+
+    }
+
     public function create($request, $response, $args)
     {
         $data = $request->getParams();
+
         $result = $this->business->salvar($data);
 
         if (!is_array($result)) {
             return $response->withJson('Erro ao tentar salvar os dados ' . $result, 400);
         }
 
-        return $response->withJSON($result);
+        return $response->withJSON($result, 201);
     }
 
     public function delete($request, $response, $args)
