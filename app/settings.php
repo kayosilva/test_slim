@@ -31,6 +31,10 @@ return [
                 'user' => 'root',
                 'password' => null,
             ]
+        ],
+        'jwt' => [
+            'secret' => 'supersecretkeyyoushouldnotcommittogithub',
+            'algorithm' => "HS256"
         ]
     ],
 ];

@@ -36,3 +36,7 @@ $container['App\Action\FocaAction'] = function ($c) {
     $business = new App\Business\FocaBusiness($c->get('em'));
     return new App\Action\FocaAction($business);
 };
+
+$container['App\Action\Auth'] = function ($c) {
+    return new App\Action\AuthAction($c);
+};
